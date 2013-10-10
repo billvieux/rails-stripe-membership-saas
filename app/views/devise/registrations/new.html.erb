@@ -30,9 +30,13 @@
       <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+10}, {name: nil, id: "card_year"}%>
     </div>
     <div class="field">
-      <%= f.input :coupon, :label => 'Promotional Coupon (if any)' %>
+      <%= f.fields_for :subscription do |ff| %>
+        <%= ff.input :coupon, :label => 'Promotional Coupon (if any)' %>
+      <% end %>
     </div>
   <% end %>
-  <%= f.hidden_field :stripe_token %>
+  <%= f.fields_for :subscription do |ff| %>
+    <%= ff.hidden_field :stripe_token %>
+  <% end %>
   <%= f.button :submit, 'Sign up', :class => 'btn-primary' %>
 <% end %>

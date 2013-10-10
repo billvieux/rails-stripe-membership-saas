@@ -7,7 +7,8 @@ describe User do
       :name => "Example User",
       :email => "user@example.com",
       :password => "changeme",
-      :password_confirmation => "changeme"
+      :password_confirmation => "changeme",
+      :subscription_attributes => {}
     }
   end
 
@@ -142,7 +143,7 @@ describe User do
       before do
         successful_stripe_response = StripeHelper::Response.new("success")
         Stripe::Customer.stub(:create).and_return(successful_stripe_response)
-        @user = User.new(email: "test@testign.com", stripe_token: 12345, name: 'tester', password: 'password')
+        @user = User.new(email: "test@example.org", subscription_attributes: { stripe_token: 12345 }, name: 'tester', password: 'password')
         @role = FactoryGirl.create(:role, name: "silver")
         @user.add_role(@role.name)
       end
@@ -152,7 +153,7 @@ describe User do
         new_user = User.last
         new_user.customer_id.should eq("youAreSuccessful")
         new_user.last_4_digits.should eq("4242")
-        new_user.stripe_token.should be_nil
+        new_user.subscription.stripe_token.should be_nil
       end
 
     end

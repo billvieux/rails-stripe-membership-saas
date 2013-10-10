@@ -68,7 +68,9 @@
       </div>
       <%= f.hidden_field :name %>
       <%= f.hidden_field :email %>
-      <%= f.hidden_field :stripe_token %>
+      <%= f.fields_for :subscription do |ff| %>
+        <%= ff.hidden_field :stripe_token %>
+      <% end %>
     </div>
     <div class="modal-footer">
       <%= f.submit "Change Credit Card", :class => "btn btn-primary" %>

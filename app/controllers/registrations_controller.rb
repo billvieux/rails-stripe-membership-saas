@@ -22,8 +22,8 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update_card
     @user = current_user
-    @user.stripe_token = params[:user][:stripe_token]
-    if @user.save
+    @user.subscription.stripe_token = params[:user][:subscription_attributes][:stripe_token]
+    if @user.subscription.save
       redirect_to edit_user_registration_path, :notice => 'Updated card.'
     else
       flash.alert = 'Unable to update card.'
@@ -34,6 +34,7 @@ class RegistrationsController < Devise::RegistrationsController
   private
   def build_resource(*args)
     super
+    resource.build_subscription if !resource.subscription # Needed so view can render nested fields
     if params[:plan]
       resource.add_role(params[:plan])
     end
